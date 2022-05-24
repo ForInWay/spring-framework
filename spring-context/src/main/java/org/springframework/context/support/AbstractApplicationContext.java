@@ -516,41 +516,41 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
-			// Prepare this context for refreshing.
+			// 上下文刷新前的准备，包括启动时间、上下文销毁、启动标识，占位符初始化等
 			prepareRefresh();
 
-			// Tell the subclass to refresh the internal bean factory.
+			// 生成一个新的Bean上下文，如有之前有，则销毁，模板方法模式，交由具体的子类实现
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
-			// Prepare the bean factory for use in this context.
+			// 设置此上下文相关的属性(类加载器、EL表达式解析器、资源解析器、BeanPostProcessor处理器、系列Aware接口、系统Bean)
 			prepareBeanFactory(beanFactory);
 
 			try {
-				// Allows post-processing of the bean factory in context subclasses.
+				// 可以添加BeanFactory的后置处理
 				postProcessBeanFactory(beanFactory);
 
-				// Invoke factory processors registered as beans in the context.
+				// 在上下文中实例化并调用所有的BeanFactoryPostProcessors
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// Register bean processors that intercept bean creation.
+				// 在上下文中注册拦截Bean的BeanFactoryPostProcessors
 				registerBeanPostProcessors(beanFactory);
 
-				// Initialize message source for this context.
+				// 初始化消息源。如果没有在此上下文中定义，则使用父级。
 				initMessageSource();
 
-				// Initialize event multicaster for this context.
+				// 初始化 ApplicationEventMulticaster。如果上下文中没有定义，则使用 SimpleApplicationEventMulticaster
 				initApplicationEventMulticaster();
 
-				// Initialize other special beans in specific context subclasses.
+				// 初始化特定上下文子类中的其他特殊bean，模板方法模式，交由具体的子类实现
 				onRefresh();
 
-				// Check for listener beans and register them.
+				// 注册实现了ApplicationListener作为监听器的Bean
 				registerListeners();
 
-				// Instantiate all remaining (non-lazy-init) singletons.
+				// 初始化上下文中所有剩余的单例Bean(非懒加载模式)
 				finishBeanFactoryInitialization(beanFactory);
 
-				// Last step: publish corresponding event.
+				// 发布上下文刷新完成事件
 				finishRefresh();
 			}
 
@@ -560,10 +560,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 							"cancelling refresh attempt: " + ex);
 				}
 
-				// Destroy already created singletons to avoid dangling resources.
+				// 销毁所有已创建的Bean
 				destroyBeans();
 
-				// Reset 'active' flag.
+				// 重新设置上下文活动标识
 				cancelRefresh(ex);
 
 				// Propagate exception to caller.
@@ -571,8 +571,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			}
 
 			finally {
-				// Reset common introspection caches in Spring's core, since we
-				// might not ever need metadata for singleton beans anymore...
+				// 重置 Spring 的常见反射元数据缓存，特别是ReflectionUtils 、 AnnotationUtils 、 ResolvableType和CachedIntrospectionResults缓存
 				resetCommonCaches();
 			}
 		}
