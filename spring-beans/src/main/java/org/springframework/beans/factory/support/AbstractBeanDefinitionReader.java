@@ -196,9 +196,8 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	}
 
 	/**
-	 * Load bean definitions from the specified resource location.
-	 * <p>The location can also be a location pattern, provided that the
-	 * ResourceLoader of this bean definition reader is a ResourcePatternResolver.
+	 * 从指定的资源位置加载 bean 定义
+	 * 位置也可以是位置模式，前提是此 bean 定义读取器的 ResourceLoader 是 ResourcePatternResolver
 	 * @param location the resource location, to be loaded with the ResourceLoader
 	 * (or ResourcePatternResolver) of this bean definition reader
 	 * @param actualResources a Set to be filled with the actual Resource objects
@@ -211,6 +210,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	 * @see #loadBeanDefinitions(org.springframework.core.io.Resource[])
 	 */
 	public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
+		// 在实例化 XmlBeanDefinitionReader 后 IoC 容器将自己注入进该读取器作为 resourceLoader 属性
 		ResourceLoader resourceLoader = getResourceLoader();
 		if (resourceLoader == null) {
 			throw new BeanDefinitionStoreException(
@@ -218,9 +218,11 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		}
 
 		if (resourceLoader instanceof ResourcePatternResolver) {
-			// Resource pattern matching available.
 			try {
+				// 将指定位置的 BeanDefinition 资源文件解析为 IoC 容器封装的资源
+				// 加载多个指定位置的 BeanDefinition 资源文件
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+				// 委派调用其子类 XmlBeanDefinitionReader 的方法，实现加载功能
 				int count = loadBeanDefinitions(resources);
 				if (actualResources != null) {
 					Collections.addAll(actualResources, resources);
@@ -236,8 +238,16 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 			}
 		}
 		else {
-			// Can only load single resources by absolute URL.
+			/**
+			 * AbstractApplicationContext 继承了 DefaultResourceLoader，所以 AbstractApplicationContext
+			 * 及其子类都会调用 DefaultResourceLoader 中的实现，将指定位置的资源文件解析为 Resource，
+			 * 至此完成了对 BeanDefinition 的资源定位
+			 */
 			Resource resource = resourceLoader.getResource(location);
+			// 从 resource 中加载 BeanDefinition，loadCount 为加载的 BeanDefinition 个数
+			// 该 loadBeanDefinitions() 方法来自其实现的 BeanDefinitionReader 接口，
+			// 且本类是一个抽象类，并未对该方法进行实现。而是交由子类进行实现，如果是用 xml 文件进行
+			// IoC 容器的初始化，则调用 XmlBeanDefinitionReader 中的实现
 			int count = loadBeanDefinitions(resource);
 			if (actualResources != null) {
 				actualResources.add(resource);

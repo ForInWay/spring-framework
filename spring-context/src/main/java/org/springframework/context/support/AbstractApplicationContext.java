@@ -84,34 +84,19 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Abstract implementation of the {@link org.springframework.context.ApplicationContext}
- * interface. Doesn't mandate the type of storage used for configuration; simply
- * implements common context functionality. Uses the Template Method design pattern,
- * requiring concrete subclasses to implement abstract methods.
- *
- * <p>In contrast to a plain BeanFactory, an ApplicationContext is supposed
- * to detect special beans defined in its internal bean factory:
- * Therefore, this class automatically registers
- * {@link org.springframework.beans.factory.config.BeanFactoryPostProcessor BeanFactoryPostProcessors},
- * {@link org.springframework.beans.factory.config.BeanPostProcessor BeanPostProcessors},
- * and {@link org.springframework.context.ApplicationListener ApplicationListeners}
- * which are defined as beans in the context.
- *
- * <p>A {@link org.springframework.context.MessageSource} may also be supplied
- * as a bean in the context, with the name "messageSource"; otherwise, message
- * resolution is delegated to the parent context. Furthermore, a multicaster
- * for application events can be supplied as an "applicationEventMulticaster" bean
- * of type {@link org.springframework.context.event.ApplicationEventMulticaster}
- * in the context; otherwise, a default multicaster of type
- * {@link org.springframework.context.event.SimpleApplicationEventMulticaster} will be used.
- *
- * <p>Implements resource loading by extending
- * {@link org.springframework.core.io.DefaultResourceLoader}.
- * Consequently treats non-URL resource paths as class path resources
- * (supporting full class path resource names that include the package path,
- * e.g. "mypackage/myresource.dat"), unless the {@link #getResourceByPath}
- * method is overridden in a subclass.
- *
+ * {@link org.springframework.context.ApplicationContext}接口的抽象实现。不强制要求用于配置的存储类型；
+ * 简单地实现通用的上下文功能。使用模板方法设计模式，需要具体的子类来实现抽象方法。
+ * 与普通的 BeanFactory 相比，ApplicationContext 应该检测其内部 bean 工厂中定义的特殊 bean：
+ * 因此，此类自动注册{@link org.springframework.beans.factory.config.BeanFactoryPostProcessor BeanFactoryPostProcessors} 、
+ * {@link org.springframework.beans.factory.config.BeanPostProcessor BeanPostProcessors}
+ * 和{@link org.springframework.context.ApplicationListener ApplicationListeners} ，
+ * 它们在上下文中定义为 bean。
+ * {@link org.springframework.context.MessageSource}也可以作为上下文中的 bean 提供，名称为“messageSource”；
+ * 否则，消息解析将委托给父上下文。
+ * 此外，应用程序事件的多播器可以在上下文中作为{@link org.springframework.context.event.ApplicationEventMulticaster}类型的“applicationEventMulticaster”bean 提供；
+ * 否则，将使用{@link org.springframework.context.event.SimpleApplicationEventMulticaster}类型的默认多播器。
+ * 通过扩展{@link org.springframework.core.io.DefaultResourceLoader}.实现资源加载。
+ * 因此将非 URL 资源路径视为类路径资源（支持包含包路径的完整类路径资源名称，例如“mypackage/myresource.dat”），除非在子类中覆盖{@link #getResourceByPath}方法。
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Mark Fisher
@@ -513,6 +498,17 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.applicationListeners;
 	}
 
+	/**
+	 * 容器初始化的过程：BeanDefinition 的 Resource 定位、BeanDefinition 的载入、BeanDefinition 的注册。
+	 *  * BeanDefinition 的载入和 bean 的依赖注入是两个独立的过程，依赖注入一般发生在 应用第一次通过
+	 *  * getBean() 方法从容器获取 bean 时。
+	 *  *
+	 *  * 另外需要注意的是，IoC 容器有一个预实例化的配置（即，将 AbstractBeanDefinition 中的 lazyInit 属性
+	 *  * 设为 true），使用户可以对容器的初始化过程做一个微小的调控，lazyInit 设为 false 的 bean
+	 *  * 将在容器初始化时进行依赖注入，而不会等到 getBean() 方法调用时才进行
+	 * @throws BeansException
+	 * @throws IllegalStateException
+	 */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
@@ -535,7 +531,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// 在上下文中注册拦截Bean的BeanFactoryPostProcessors
 				registerBeanPostProcessors(beanFactory);
 
-				// 初始化消息源。如果没有在此上下文中定义，则使用父级。
+				// 初始化消息源。如果没有在此上下文中定义，则使用父级。和国际化相关
 				initMessageSource();
 
 				// 初始化 ApplicationEventMulticaster。如果上下文中没有定义，则使用 SimpleApplicationEventMulticaster
@@ -628,13 +624,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
-	 * Tell the subclass to refresh the internal bean factory.
+	 * 告诉子类，去刷新内部的BeanFactory
 	 * @return the fresh BeanFactory instance
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		// 模板方法模式，定义了抽象方法，具体实现交由具体的子类实现
 		refreshBeanFactory();
+		// 同模板方法
 		return getBeanFactory();
 	}
 

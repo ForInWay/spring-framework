@@ -24,12 +24,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link AbstractRefreshableApplicationContext} subclass that adds common handling
- * of specified config locations. Serves as base class for XML-based application
- * context implementations such as {@link ClassPathXmlApplicationContext} and
- * {@link FileSystemXmlApplicationContext}, as well as
- * {@link org.springframework.web.context.support.XmlWebApplicationContext}.
- *
+ * {@link AbstractRefreshableApplicationContext}子类，添加了对指定配置位置的通用处理。作为基于 XML 的应用程序上下文实现的基类，
+ * 例如{@link ClassPathXmlApplicationContext}和{@link FileSystemXmlApplicationContext}，以及{@link org.springframework.web.context.support.XmlWebApplicationContext}
  * @author Juergen Hoeller
  * @since 2.5.2
  * @see #setConfigLocation

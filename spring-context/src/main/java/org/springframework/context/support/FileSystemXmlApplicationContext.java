@@ -23,30 +23,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
 /**
- * Standalone XML application context, taking the context definition files
- * from the file system or from URLs, interpreting plain paths as relative
- * file system locations (e.g. "mydir/myfile.txt"). Useful for test harnesses
- * as well as for standalone environments.
- *
- * <p><b>NOTE:</b> Plain paths will always be interpreted as relative
- * to the current VM working directory, even if they start with a slash.
- * (This is consistent with the semantics in a Servlet container.)
- * <b>Use an explicit "file:" prefix to enforce an absolute file path.</b>
- *
- * <p>The config location defaults can be overridden via {@link #getConfigLocations},
- * Config locations can either denote concrete files like "/myfiles/context.xml"
- * or Ant-style patterns like "/myfiles/*-context.xml" (see the
- * {@link org.springframework.util.AntPathMatcher} javadoc for pattern details).
- *
- * <p>Note: In case of multiple config locations, later bean definitions will
- * override ones defined in earlier loaded files. This can be leveraged to
- * deliberately override certain bean definitions via an extra XML file.
- *
- * <p><b>This is a simple, one-stop shop convenience ApplicationContext.
- * Consider using the {@link GenericApplicationContext} class in combination
- * with an {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}
- * for more flexible context setup.</b>
- *
+ * 独立的 XML 应用程序上下文，从文件系统或 URL 中获取上下文定义文件，将普通路径解释为相对文件系统位置（例如“mydir/myfile.txt”）。对于测试工具以及独立环境很有用。
+ * 注意：普通路径将始终被解释为相对于当前 VM 工作目录，即使它们以斜杠开头。 （这与 Servlet 容器中的语义一致。）使用显式的“file:”前缀来强制使用绝对文件路径。
+ * 配置位置默认值可以通过{@link #getConfigLocations}覆盖，配置位置可以表示具体文件，如“/myfiles/context.xml”或 Ant 样式模式{@link org.springframework.util.AntPathMatcher}，如“/myfiles/*-context.xml”（参见org.springframework.util.AntPathMatcher javadoc 获取模式详细信息）。
+ * 注意：在多个配置位置的情况下，以后的 bean 定义将覆盖之前加载的文件中定义的那些。这可以用来通过额外的 XML 文件故意覆盖某些 bean 定义。
+ * 这是一个简单的、一站式便利的ApplicationContext。考虑将{@link GenericApplicationContext}类与{@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}结合使用，以获得更灵活的上下文设置
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see #getResource
