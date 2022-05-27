@@ -21,51 +21,16 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
- * The root interface for accessing a Spring bean container.
- *
- * <p>This is the basic client view of a bean container;
- * further interfaces such as {@link ListableBeanFactory} and
- * {@link org.springframework.beans.factory.config.ConfigurableBeanFactory}
- * are available for specific purposes.
- *
- * <p>This interface is implemented by objects that hold a number of bean definitions,
- * each uniquely identified by a String name. Depending on the bean definition,
- * the factory will return either an independent instance of a contained object
- * (the Prototype design pattern), or a single shared instance (a superior
- * alternative to the Singleton design pattern, in which the instance is a
- * singleton in the scope of the factory). Which type of instance will be returned
- * depends on the bean factory configuration: the API is the same. Since Spring
- * 2.0, further scopes are available depending on the concrete application
- * context (e.g. "request" and "session" scopes in a web environment).
- *
- * <p>The point of this approach is that the BeanFactory is a central registry
- * of application components, and centralizes configuration of application
- * components (no more do individual objects need to read properties files,
- * for example). See chapters 4 and 11 of "Expert One-on-One J2EE Design and
- * Development" for a discussion of the benefits of this approach.
- *
- * <p>Note that it is generally better to rely on Dependency Injection
- * ("push" configuration) to configure application objects through setters
- * or constructors, rather than use any form of "pull" configuration like a
- * BeanFactory lookup. Spring's Dependency Injection functionality is
- * implemented using this BeanFactory interface and its subinterfaces.
- *
- * <p>Normally a BeanFactory will load bean definitions stored in a configuration
- * source (such as an XML document), and use the {@code org.springframework.beans}
- * package to configure the beans. However, an implementation could simply return
- * Java objects it creates as necessary directly in Java code. There are no
- * constraints on how the definitions could be stored: LDAP, RDBMS, XML,
- * properties file, etc. Implementations are encouraged to support references
- * amongst beans (Dependency Injection).
- *
- * <p>In contrast to the methods in {@link ListableBeanFactory}, all of the
- * operations in this interface will also check parent factories if this is a
- * {@link HierarchicalBeanFactory}. If a bean is not found in this factory instance,
- * the immediate parent factory will be asked. Beans in this factory instance
- * are supposed to override beans of the same name in any parent factory.
- *
- * <p>Bean factory implementations should support the standard bean lifecycle interfaces
- * as far as possible. The full set of initialization methods and their standard order is:
+ * 用于访问 Spring bean 容器的根接口。
+ * 这是 bean 容器的基本客户端视图；其他接口，如{@link ListableBeanFactory}和{@link org.springframework.beans.factory.config.ConfigurableBeanFactory}可用于特定目的。
+ * 该接口由包含许多 bean 定义的对象实现，每个定义由一个字符串名称唯一标识。根据 bean 定义，工厂将返回包含对象的独立实例（原型设计模式）或单个共享实例（单例设计模式的更好替代方案，其中实例是范围内的单例）工厂）。
+ * 将返回哪种类型的实例取决于 bean 工厂配置：API 相同。从 Spring 2.0 开始，根据具体的应用程序上下文（例如，Web 环境中的“请求”和“会话”范围），可以使用更多范围。
+ * 这种方法的要点在于 BeanFactory 是应用程序组件的中央注册表，并集中了应用程序组件的配置（例如，单个对象不再需要读取属性文件）。有关这种方法的好处的讨论，请参阅“专家一对一 J2EE 设计和开发”的第 4 章和第 11 章。
+ * 请注意，通常最好依靠依赖注入（“推送”配置）通过设置器或构造函数来配置应用程序对象，而不是使用任何形式的“拉”配置，如 BeanFactory 查找。 Spring 的依赖注入功能是使用这个 BeanFactory 接口及其子接口实现的。
+ * 通常，BeanFactory 会加载存储在配置源（例如 XML 文档）中的 bean 定义，并使用{@code org.springframework.beans}包来配置 bean。
+ * 但是，实现可以简单地返回它根据需要直接在 Java 代码中创建的 Java 对象。对如何存储定义没有限制：LDAP、RDBMS、XML、属性文件等。鼓励实现支持 bean 之间的引用（依赖注入）。
+ * 与{@link ListableBeanFactory}中的方法相比，此接口中的所有操作也会检查父工厂是否为{@link HierarchicalBeanFactory} 。如果在该工厂实例中找不到 bean，则会询问直接父工厂。这个工厂实例中的 bean 应该覆盖任何父工厂中的同名 bean。
+ * Bean 工厂实现应尽可能支持标准的 bean 生命周期接口。全套初始化方法及其标准顺序为：
  * <ol>
  * <li>BeanNameAware's {@code setBeanName}
  * <li>BeanClassLoaderAware's {@code setBeanClassLoader}
@@ -88,7 +53,7 @@ import org.springframework.lang.Nullable;
  * <li>{@code postProcessAfterInitialization} methods of BeanPostProcessors
  * </ol>
  *
- * <p>On shutdown of a bean factory, the following lifecycle methods apply:
+ * <p>在关闭 bean 工厂时，将应用以下生命周期方法：
  * <ol>
  * <li>{@code postProcessBeforeDestruction} methods of DestructionAwareBeanPostProcessors
  * <li>DisposableBean's {@code destroy}

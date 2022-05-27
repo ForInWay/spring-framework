@@ -22,28 +22,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 /**
- * Strategy interface for resolving a location pattern (for example,
- * an Ant-style path pattern) into Resource objects.
- *
- * <p>This is an extension to the {@link org.springframework.core.io.ResourceLoader}
- * interface. A passed-in ResourceLoader (for example, an
- * {@link org.springframework.context.ApplicationContext} passed in via
- * {@link org.springframework.context.ResourceLoaderAware} when running in a context)
- * can be checked whether it implements this extended interface too.
- *
- * <p>{@link PathMatchingResourcePatternResolver} is a standalone implementation
- * that is usable outside an ApplicationContext, also used by
- * {@link ResourceArrayPropertyEditor} for populating Resource array bean properties.
- *
- * <p>Can be used with any sort of location pattern (e.g. "/WEB-INF/*-context.xml"):
- * Input patterns have to match the strategy implementation. This interface just
- * specifies the conversion method rather than a specific pattern format.
- *
- * <p>This interface also suggests a new resource prefix "classpath*:" for all
- * matching resources from the class path. Note that the resource location is
- * expected to be a path without placeholders in this case (e.g. "/beans.xml");
- * JAR files or classes directories can contain multiple files of the same name.
- *
+ * 用于将位置模式（例如，Ant 样式的路径模式）解析为 Resource 对象的策略接口。
+ * 这是{@link org.springframework.core.io.ResourceLoader}接口的扩展。可以检查传入的 ResourceLoader
+ * （例如，在上下文中运行时通过{@link org.springframework.context.ApplicationContext}传入的{@link org.springframework.context.ResourceLoaderAware}是否也实现了这个扩展接口。
+ * {@link PathMatchingResourcePatternResolver}是一个独立的实现，可在 ApplicationContext 之外使用， {@link ResourceArrayPropertyEditor}也使用它来填充资源数组 bean 属性。
+ * 可以与任何类型的位置模式一起使用（例如“/WEB-INF/*-context.xml”）：输入模式必须与策略实现相匹配。这个接口只是指定了转换方法，而不是具体的模式格式。
+ * 该接口还为类路径中的所有匹配资源建议一个新的资源前缀“classpath*:”。请注意，在这种情况下，资源位置应该是没有占位符的路径（例如“/beans.xml”）； JAR 文件或类目录可以包含多个同名文件。
  * @author Juergen Hoeller
  * @since 1.0.2
  * @see org.springframework.core.io.Resource
