@@ -300,7 +300,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
-	 * Load bean definitions from the specified XML file.
+	 * 从指定的 XML 文件加载 bean 定义。
 	 * @param resource the resource descriptor for the XML file
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
@@ -375,7 +375,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
-	 * Actually load bean definitions from the specified XML file.
+	 * 从指定的 XML 文件加载 bean 定义的实际方法。
 	 * @param inputSource the SAX InputSource to read from
 	 * @param resource the resource descriptor for the XML file
 	 * @return the number of bean definitions found
@@ -387,7 +387,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
+			// xml文件定义信息转换为标准文档信息
 			Document doc = doLoadDocument(inputSource, resource);
+			// 根据文档中的内容，注册实际的Bean，并返回注册的Bean数量
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
@@ -493,10 +495,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
-	 * Register the bean definitions contained in the given DOM document.
-	 * Called by {@code loadBeanDefinitions}.
-	 * <p>Creates a new instance of the parser class and invokes
-	 * {@code registerBeanDefinitions} on it.
+	 * 注册包含在给定 DOM 文档中的 bean 定义。由loadBeanDefinitions调用。
+	 * 创建解析器类的新实例并在其上调用registerBeanDefinitions
 	 * @param doc the DOM document
 	 * @param resource the resource descriptor (for context information)
 	 * @return the number of bean definitions found
@@ -506,9 +506,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
+		// 创建文档读取器
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+		// 返回在注册表中定义的bean数量
 		int countBefore = getRegistry().getBeanDefinitionCount();
+		// 实际注册Bean
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+		// 返回此次注册的Bean数量
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
 

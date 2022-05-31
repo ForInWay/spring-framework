@@ -49,6 +49,13 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	private final Map<String, String> aliasMap = new ConcurrentHashMap<>(16);
 
 
+	/**
+	 * 使用ConcurrentHashMap<alias,beanName>存储别名
+	 * 1. 别名校验
+	 * 2.
+	 * @param name the canonical name
+	 * @param alias the alias to be registered
+	 */
 	@Override
 	public void registerAlias(String name, String alias) {
 		Assert.hasText(name, "'name' must not be empty");
@@ -185,9 +192,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	}
 
 	/**
-	 * Check whether the given name points back to the given alias as an alias
-	 * in the other direction already, catching a circular reference upfront
-	 * and throwing a corresponding IllegalStateException.
+	 * 检查给定名称是否已经作为另一个方向的别名指向给定别名，预先捕获循环引用并抛出相应的 IllegalStateException。
 	 * @param name the candidate name
 	 * @param alias the candidate alias
 	 * @see #registerAlias
