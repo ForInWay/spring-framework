@@ -87,31 +87,30 @@ class BeanDefinitionValueResolver {
 
 
 	/**
-	 * Given a PropertyValue, return a value, resolving any references to other
-	 * beans in the factory if necessary. The value could be:
-	 * <li>A BeanDefinition, which leads to the creation of a corresponding
-	 * new bean instance. Singleton flags and names of such "inner beans"
-	 * are always ignored: Inner beans are anonymous prototypes.
-	 * <li>A RuntimeBeanReference, which must be resolved.
-	 * <li>A ManagedList. This is a special collection that may contain
-	 * RuntimeBeanReferences or Collections that will need to be resolved.
-	 * <li>A ManagedSet. May also contain RuntimeBeanReferences or
-	 * Collections that will need to be resolved.
-	 * <li>A ManagedMap. In this case the value may be a RuntimeBeanReference
-	 * or Collection that will need to be resolved.
-	 * <li>An ordinary object or {@code null}, in which case it's left alone.
+	 * 给定一个 PropertyValue，返回一个值，必要时解析对工厂中其他 bean 的任何引用。该值可能是：
+	 * 一个 BeanDefinition，它导致创建相应的新 bean 实例。此类“内部 bean”的单例标志和名称总是被忽略：内部 bean 是匿名原型。
+	 * 必须解析的 RuntimeBeanReference。
+	 * 一个托管列表。这是一个特殊的集合，可能包含需要解析的 RuntimeBeanReferences 或 Collections。
+	 * 一个托管集。还可能包含需要解析的 RuntimeBeanReferences 或 Collections。
+	 * 托管地图。在这种情况下，该值可能是需要解析的 RuntimeBeanReference 或 Collection。
+	 * 一个普通的对象或null ，在这种情况下它会被单独留下。
 	 * @param argName the name of the argument that the value is defined for
 	 * @param value the value object to resolve
 	 * @return the resolved object
 	 */
 	@Nullable
 	public Object resolveValueIfNecessary(Object argName, @Nullable Object value) {
-		// We must check each value to see whether it requires a runtime reference
-		// to another bean to be resolved.
+		// 对引用类型的属性进行解析，RuntimeBeanReference 是在对 BeanDefinition 进行解析时生成的数据对象
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
+			/**
+			 * ！！！！！！！！！！！！！！！！
+			 * 解析引用类型的属性值
+			 * ！！！！！！！！！！！！！！！！
+			 */
 			return resolveReference(argName, ref);
 		}
+		// 对属性值是引用容器中另一个 bean 名称的解析
 		else if (value instanceof RuntimeBeanNameReference) {
 			String refName = ((RuntimeBeanNameReference) value).getBeanName();
 			refName = String.valueOf(doEvaluate(refName));
@@ -121,6 +120,7 @@ class BeanDefinitionValueResolver {
 			}
 			return refName;
 		}
+		// 对 BeanDefinitionHolder 类型属性的解析，主要是 bean 中的内部类
 		else if (value instanceof BeanDefinitionHolder) {
 			// Resolve BeanDefinitionHolder: contains BeanDefinition with name and aliases.
 			BeanDefinitionHolder bdHolder = (BeanDefinitionHolder) value;
@@ -133,6 +133,7 @@ class BeanDefinitionValueResolver {
 					ObjectUtils.getIdentityHexString(bd);
 			return resolveInnerBean(argName, innerBeanName, bd);
 		}
+		// 对描述符类型的属性解析
 		else if (value instanceof DependencyDescriptor) {
 			Set<String> autowiredBeanNames = new LinkedHashSet<>(4);
 			Object result = this.beanFactory.resolveDependency(
@@ -144,14 +145,17 @@ class BeanDefinitionValueResolver {
 			}
 			return result;
 		}
+		// 对集合数组类型的属性解析
 		else if (value instanceof ManagedArray) {
-			// May need to resolve contained runtime references.
+			// 获取数组的类型
 			ManagedArray array = (ManagedArray) value;
 			Class<?> elementType = array.resolvedElementType;
 			if (elementType == null) {
+				// 获取数组元素的类型
 				String elementTypeName = array.getElementTypeName();
 				if (StringUtils.hasText(elementTypeName)) {
 					try {
+						// 使用反射机制创建指定类型的对象
 						elementType = ClassUtils.forName(elementTypeName, this.beanFactory.getBeanClassLoader());
 						array.resolvedElementType = elementType;
 					}
@@ -163,23 +167,30 @@ class BeanDefinitionValueResolver {
 					}
 				}
 				else {
+					// 没有获取到数组的类型，也没有获取到数组元素的类型
+					// 则直接设置数组的类型为 Object
 					elementType = Object.class;
 				}
 			}
+			// 创建指定类型的数组
 			return resolveManagedArray(argName, (List<?>) value, elementType);
 		}
+		// 解析 list 类型的属性值
 		else if (value instanceof ManagedList) {
 			// May need to resolve contained runtime references.
 			return resolveManagedList(argName, (List<?>) value);
 		}
+		// 解析 set 类型的属性值
 		else if (value instanceof ManagedSet) {
 			// May need to resolve contained runtime references.
 			return resolveManagedSet(argName, (Set<?>) value);
 		}
+		// 解析 map 类型的属性值
 		else if (value instanceof ManagedMap) {
 			// May need to resolve contained runtime references.
 			return resolveManagedMap(argName, (Map<?, ?>) value);
 		}
+		// 解析 Properties 类型的属性值，Properties 其实就是 key 和 value 均为字符串的 map
 		else if (value instanceof ManagedProperties) {
 			Properties original = (Properties) value;
 			Properties copy = new Properties();
@@ -199,16 +210,20 @@ class BeanDefinitionValueResolver {
 			});
 			return copy;
 		}
+		// 解析字符串类型的属性值
 		else if (value instanceof TypedStringValue) {
 			// Convert value to target type here.
 			TypedStringValue typedStringValue = (TypedStringValue) value;
 			Object valueObject = evaluate(typedStringValue);
 			try {
+				// 获取属性的目标类型
 				Class<?> resolvedTargetType = resolveTargetType(typedStringValue);
 				if (resolvedTargetType != null) {
+					// 对目标类型的属性进行解析，递归调用
 					return this.typeConverter.convertIfNecessary(valueObject, resolvedTargetType);
 				}
 				else {
+					// 没有获取到属性的目标对象，则按 Object 类型返回
 					return valueObject;
 				}
 			}
@@ -271,7 +286,7 @@ class BeanDefinitionValueResolver {
 	}
 
 	/**
-	 * Evaluate the given String value as an expression, if necessary.
+	 * 如有必要，将给定的 String 值评估为表达式
 	 * @param value the original value (may be an expression)
 	 * @return the resolved value if necessary, or the original String value
 	 */
@@ -296,13 +311,15 @@ class BeanDefinitionValueResolver {
 	}
 
 	/**
-	 * Resolve a reference to another bean in the factory.
+	 * 解析对工厂中另一个 bean 的引用
 	 */
 	@Nullable
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
 		try {
+			// 获取 所引用bean 的 beanName
 			Object bean;
 			Class<?> beanType = ref.getBeanType();
+			// 如果引用的对象在父容器中，则从父容器中获取指定的引用对象
 			if (ref.isToParent()) {
 				BeanFactory parent = this.beanFactory.getParentBeanFactory();
 				if (parent == null) {
@@ -319,6 +336,8 @@ class BeanDefinitionValueResolver {
 				}
 			}
 			else {
+				// 从当前的容器中获取指定的引用 bean对象，如果指定的 bean 没有被实例化
+				// 则会递归触发引用 bean 的初始化和依赖注入
 				String resolvedName;
 				if (beanType != null) {
 					NamedBeanHolder<?> namedBean = this.beanFactory.resolveNamedBean(beanType);

@@ -57,20 +57,34 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	}
 
 
+	/**
+	 * 使用初始化策略实例化Bean对象
+	 * @param bd the bean definition
+	 * @param beanName the name of the bean when it is created in this context.
+	 * The name can be {@code null} if we are autowiring a bean which doesn't
+	 * belong to the factory.
+	 * @param owner the owning BeanFactory
+	 * @return
+	 */
 	@Override
 	public Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
-		// Don't override the class with CGLIB if no overrides.
+		// 如果配置的bean中没有方法覆盖，则使用Java的反射机制实例化对象，否则使用CGLIB
 		if (!bd.hasMethodOverrides()) {
 			Constructor<?> constructorToUse;
 			synchronized (bd.constructorArgumentLock) {
+				// 获取对象的构造方法对 bean 进行实例化
 				constructorToUse = (Constructor<?>) bd.resolvedConstructorOrFactoryMethod;
+				// 如果前面没有获取到构造方法，则通过反射获取
 				if (constructorToUse == null) {
+					// 使用 JDK 的反射机制，判断要实例化的 bean 是否是接口
+					// 如果 clazz 是一个接口，直接抛出异常
 					final Class<?> clazz = bd.getBeanClass();
 					if (clazz.isInterface()) {
 						throw new BeanInstantiationException(clazz, "Specified class is an interface");
 					}
 					try {
 						if (System.getSecurityManager() != null) {
+							// 这里使用了一个 PrivilegedExceptionAction 的匿名内部类，使用反射机制获取 bean 的构造方法
 							constructorToUse = AccessController.doPrivileged(
 									(PrivilegedExceptionAction<Constructor<?>>) clazz::getDeclaredConstructor);
 						}
@@ -84,10 +98,17 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
+			// 根据传入的 Constructor，在 BeanUtils 中调用该 Constructor 的
+			// newInstance(Object...) 方法，实例化指定对象
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {
-			// Must generate CGLIB subclass.
+			/**
+			 * ！！！！！！！！！！！！！！
+			 * 使用 CGLIB 来实例化对象
+			 * 调用了 CglibSubclassingInstantiationStrategy 中的实现
+			 * ！！！！！！！！！！！！！！
+			 */
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}
 	}

@@ -97,10 +97,12 @@ public abstract class AbstractPropertyAccessor extends TypeConverterSupport impl
 		}
 		try {
 			for (PropertyValue pv : propertyValues) {
-				// setPropertyValue may throw any BeansException, which won't be caught
-				// here, if there is a critical failure such as no matching field.
-				// We can attempt to deal only with less serious exceptions.
 				try {
+					/**
+					 * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+					 * 该方法走 BeanWrapperImpl 中的实现，这是 bean属性值注入 具体实现的入口
+					 * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+					 */
 					setPropertyValue(pv);
 				}
 				catch (NotWritablePropertyException ex) {
@@ -129,7 +131,8 @@ public abstract class AbstractPropertyAccessor extends TypeConverterSupport impl
 			}
 		}
 
-		// If we encountered individual exceptions, throw the composite exception.
+		// 如果出现 PropertyAccessException 异常，则将这些异常积累起来放到一个集合中，然后一次性抛出！！！
+		// 这种抛异常的方式 在实际的开发中也时常使用，可以好好看一下，对比一下
 		if (propertyAccessExceptions != null) {
 			PropertyAccessException[] paeArray = propertyAccessExceptions.toArray(new PropertyAccessException[0]);
 			throw new PropertyBatchUpdateException(paeArray);

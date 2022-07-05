@@ -263,6 +263,11 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			if (nestedPa == this) {
 				pv.getOriginalPropertyValue().resolvedTokens = tokens;
 			}
+			/**
+			 * ！！！！！！！！！！！！！！！
+			 * 进入 bean 属性值注入的具体实现
+			 * ！！！！！！！！！！！！！！！
+			 */
 			nestedPa.setPropertyValue(tokens, pv);
 		}
 		else {
