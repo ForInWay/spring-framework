@@ -166,7 +166,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Nullable
 	private SecurityContextProvider securityContextProvider;
 
-	/** Map from bean name to merged RootBeanDefinition. */
+	/** 从 bean 名称映射到合并的 RootBeanDefinition */
 	private final Map<String, RootBeanDefinition> mergedBeanDefinitions = new ConcurrentHashMap<>(256);
 
 	/** Names of beans that have already been created at least once. */
@@ -984,8 +984,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Return whether this factory holds a InstantiationAwareBeanPostProcessor
-	 * that will get applied to singleton beans on creation.
+	 * 返回此工厂是否拥有一个将在创建时应用于单例 bean 的 InstantiationAwareBeanPostProcessor。
 	 * @see #addBeanPostProcessor
 	 * @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor
 	 */
@@ -1302,8 +1301,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 
 	/**
-	 * Return a merged RootBeanDefinition, traversing the parent bean definition
-	 * if the specified bean corresponds to a child bean definition.
+	 * 返回一个合并的 RootBeanDefinition，如果指定的 bean 对应于子 bean 定义，则遍历父 bean 定义。
 	 * @param beanName the name of the bean to retrieve the merged definition for
 	 * @return a (potentially merged) RootBeanDefinition for the given bean
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the given name
@@ -1319,8 +1317,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Return a RootBeanDefinition for the given top-level bean, by merging with
-	 * the parent if the given bean's definition is a child bean definition.
+	 * 如果给定 bean 的定义是子 bean 定义，则通过与父级合并返回给定顶级 bean 的 RootBeanDefinition
 	 * @param beanName the name of the bean definition
 	 * @param bd the original bean definition (Root/ChildBeanDefinition)
 	 * @return a (potentially merged) RootBeanDefinition for the given bean
@@ -1333,8 +1330,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Return a RootBeanDefinition for the given bean, by merging with the
-	 * parent if the given bean's definition is a child bean definition.
+	 * 如果给定 bean 的定义是子 bean 定义，则通过与父合并返回给定 bean 的 RootBeanDefinition
 	 * @param beanName the name of the bean definition
 	 * @param bd the original bean definition (Root/ChildBeanDefinition)
 	 * @param containingBd the containing bean definition in case of inner bean,
@@ -1352,31 +1348,44 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// Check with full lock now in order to enforce the same merged instance.
 			if (containingBd == null) {
+				// 从缓存中获取
 				mbd = this.mergedBeanDefinitions.get(beanName);
 			}
 
 			if (mbd == null || mbd.stale) {
 				previous = mbd;
+				// 是否存在父名称
 				if (bd.getParentName() == null) {
-					// Use copy of given root bean definition.
+					// 类型是否等于RootBeanDefinition
 					if (bd instanceof RootBeanDefinition) {
+						// 做一次对象拷贝
 						mbd = ((RootBeanDefinition) bd).cloneBeanDefinition();
 					}
 					else {
+						// 将 beanDefinition 创建成 RootBeanDefinition
 						mbd = new RootBeanDefinition(bd);
 					}
 				}
 				else {
 					// Child bean definition: needs to be merged with parent.
+					// 父BeanDefinition
 					BeanDefinition pbd;
 					try {
+						// 父类beanName
 						String parentBeanName = transformedBeanName(bd.getParentName());
+						// 当前beanName是否等于父的beanName
 						if (!beanName.equals(parentBeanName)) {
+							// 存在父 beanName
+							// 父 beanDefinition
+							// 递归调用
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
+							// 获取父 beanFactory
 							BeanFactory parent = getParentBeanFactory();
+							// beanFactory 类型判断
 							if (parent instanceof ConfigurableBeanFactory) {
+								// ConfigurableBeanFactory 的获取方式
 								pbd = ((ConfigurableBeanFactory) parent).getMergedBeanDefinition(parentBeanName);
 							}
 							else {
@@ -1390,13 +1399,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						throw new BeanDefinitionStoreException(bd.getResourceDescription(), beanName,
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
-					// Deep copy with overridden values.
+					// 将 父 BeanDefinition 对象拷贝
 					mbd = new RootBeanDefinition(pbd);
+					// 覆盖 beanDefinition
 					mbd.overrideFrom(bd);
 				}
 
-				// Set default singleton scope, if not configured before.
+				// 作用域设置
 				if (!StringUtils.hasLength(mbd.getScope())) {
+					// 没有设置作用域直接给单例类型
 					mbd.setScope(SCOPE_SINGLETON);
 				}
 
@@ -1404,6 +1415,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// Let's correct this on the fly here, since this might be the result of
 				// parent-child merging for the outer bean, in which case the original inner bean
 				// definition will not have inherited the merged outer bean's singleton status.
+				// 修正 作用域
 				if (containingBd != null && !containingBd.isSingleton() && mbd.isSingleton()) {
 					mbd.setScope(containingBd.getScope());
 				}
@@ -1411,6 +1423,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// Cache the merged bean definition for the time being
 				// (it might still get re-merged later on in order to pick up metadata changes)
 				if (containingBd == null && isCacheBeanMetadata()) {
+					// 放入缓存
 					this.mergedBeanDefinitions.put(beanName, mbd);
 				}
 			}
@@ -1453,8 +1466,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Remove the merged bean definition for the specified bean,
-	 * recreating it on next access.
+	 * 删除指定 bean 的合并 bean 定义，在下次访问时重新创建它。
 	 * @param beanName the bean name to clear the merged definition for
 	 */
 	protected void clearMergedBeanDefinition(String beanName) {
@@ -1747,8 +1759,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (!this.alreadyCreated.contains(beanName)) {
 			synchronized (this.mergedBeanDefinitions) {
 				if (!this.alreadyCreated.contains(beanName)) {
-					// Let the bean definition get re-merged now that we're actually creating
-					// the bean... just in case some of its metadata changed in the meantime.
 					clearMergedBeanDefinition(beanName);
 					this.alreadyCreated.add(beanName);
 				}

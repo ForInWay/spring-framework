@@ -1106,8 +1106,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
-	 * Apply before-instantiation post-processors, resolving whether there is a
-	 * before-instantiation shortcut for the specified bean.
+	 * 应用实例化前后处理器，解析指定 bean 是否存在实例化前快捷方式。
 	 * @param beanName the name of the bean
 	 * @param mbd the bean definition for the bean
 	 * @return the shortcut-determined bean instance, or {@code null} if none
@@ -1981,9 +1980,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
 	/**
-	 * Applies the {@code postProcessAfterInitialization} callback of all
-	 * registered BeanPostProcessors, giving them a chance to post-process the
-	 * object obtained from FactoryBeans (for example, to auto-proxy them).
+	 * 应用所有已注册 BeanPostProcessor 的postProcessAfterInitialization回调，
+	 * 让它们有机会对从 FactoryBeans 获得的对象进行后处理（例如，自动代理它们）
 	 * @see #applyBeanPostProcessorsAfterInitialization
 	 */
 	@Override

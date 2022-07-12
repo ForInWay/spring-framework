@@ -189,10 +189,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	}
 
 	/**
-	 * Post-process the given object that has been obtained from the FactoryBean.
-	 * The resulting object will get exposed for bean references.
-	 * <p>The default implementation simply returns the given object as-is.
-	 * Subclasses may override this, for example, to apply post-processors.
+	 * 对从 FactoryBean 获得的给定对象进行后处理。生成的对象将为 bean 引用公开。
+	 * 默认实现只是按原样返回给定对象。子类可以覆盖它，例如，应用后处理器
 	 * @param object the object obtained from the FactoryBean.
 	 * @param beanName the name of the bean
 	 * @return the object to expose
