@@ -141,8 +141,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	}
 
 	/**
-	 * Triggers {@link #refresh()} if not refreshed in the concrete context's
-	 * constructor already.
+	 * 如果尚未在具体上下文的构造函数中刷新，则触发refresh() 。
 	 */
 	@Override
 	public void afterPropertiesSet() {

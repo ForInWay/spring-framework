@@ -51,13 +51,13 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	String getId();
 
 	/**
-	 * Return a name for the deployed application that this context belongs to.
+	 * 返回此上下文所属的已部署应用程序的名称。
 	 * @return a name for the deployed application, or the empty String by default
 	 */
 	String getApplicationName();
 
 	/**
-	 * Return a friendly name for this context.
+	 * 返回此上下文的友好名称。
 	 * @return a display name for this context (never {@code null})
 	 */
 	String getDisplayName();
@@ -69,8 +69,7 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	long getStartupDate();
 
 	/**
-	 * Return the parent context, or {@code null} if there is no parent
-	 * and this is the root of the context hierarchy.
+	 * 返回父上下文，如果没有父上下文，则返回null ，这是上下文层次结构的根。
 	 * @return the parent context, or {@code null} if there is no parent
 	 */
 	@Nullable

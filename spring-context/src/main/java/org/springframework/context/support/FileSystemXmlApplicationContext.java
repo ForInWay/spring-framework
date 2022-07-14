@@ -103,8 +103,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	}
 
 	/**
-	 * Create a new FileSystemXmlApplicationContext with the given parent,
-	 * loading the definitions from the given XML files.
+	 * 使用给定的父级创建一个新的 FileSystemXmlApplicationContext，从给定的 XML 文件加载定义。
 	 * @param configLocations array of file paths
 	 * @param refresh whether to automatically refresh the context,
 	 * loading all bean definitions and creating all singletons.
@@ -126,10 +125,8 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 
 
 	/**
-	 * Resolve resource paths as file system paths.
-	 * <p>Note: Even if a given path starts with a slash, it will get
-	 * interpreted as relative to the current VM working directory.
-	 * This is consistent with the semantics in a Servlet container.
+	 * 将资源路径解析为文件系统路径。
+	 * 注意：即使给定路径以斜杠开头，它也会被解释为相对于当前 VM 工作目录。这与 Servlet 容器中的语义一致。
 	 * @param path the path to the resource
 	 * @return the Resource handle
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext#getResourceByPath
