@@ -50,15 +50,9 @@ public interface ApplicationEventPublisher {
 	}
 
 	/**
-	 * Notify all <strong>matching</strong> listeners registered with this
-	 * application of an event.
-	 * <p>If the specified {@code event} is not an {@link ApplicationEvent},
-	 * it is wrapped in a {@link PayloadApplicationEvent}.
-	 * <p>Such an event publication step is effectively a hand-off to the
-	 * multicaster and does not imply synchronous/asynchronous execution
-	 * or even immediate execution at all. Event listeners are encouraged
-	 * to be as efficient as possible, individually using asynchronous
-	 * execution for longer-running and potentially blocking operations.
+	 * 通知在此应用程序中注册的所有匹配的侦听器一个事件。
+	 * 如果指定的event不是ApplicationEvent ，则将其包装在PayloadApplicationEvent中。
+	 * 这样的事件发布步骤实际上是对多播器的切换，并且根本不暗示同步/异步执行甚至立即执行。鼓励事件侦听器尽可能高效，单独使用异步执行来进行更长时间运行和可能阻塞的操作。
 	 * @param event the event to publish
 	 * @since 4.2
 	 * @see #publishEvent(ApplicationEvent)

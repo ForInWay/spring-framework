@@ -34,17 +34,12 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * A root bean definition represents the merged bean definition that backs
- * a specific bean in a Spring BeanFactory at runtime. It might have been created
- * from multiple original bean definitions that inherit from each other,
- * typically registered as {@link GenericBeanDefinition GenericBeanDefinitions}.
- * A root bean definition is essentially the 'unified' bean definition view at runtime.
- *
- * <p>Root bean definitions may also be used for registering individual bean definitions
- * in the configuration phase. However, since Spring 2.5, the preferred way to register
- * bean definitions programmatically is the {@link GenericBeanDefinition} class.
- * GenericBeanDefinition has the advantage that it allows to dynamically define
- * parent dependencies, not 'hard-coding' the role as a root bean definition.
+ * 根 bean 定义表示在运行时支持 Spring BeanFactory 中的特定 bean 的合并 bean 定义。
+ * 它可能是从相互继承的多个原始 bean 定义创建的，通常注册为GenericBeanDefinitions 。
+ * 根 bean 定义本质上是运行时的“统一”bean 定义视图。
+ * 根 bean 定义也可用于在配置阶段注册单个 bean 定义。
+ * 但是，从 Spring 2.5 开始，以编程方式注册 bean 定义的首选方法是GenericBeanDefinition类。
+ * GenericBeanDefinition 的优点是它允许动态定义父依赖项，而不是将角色“硬编码”为根 bean 定义。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -277,7 +272,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	}
 
 	/**
-	 * Register a target definition that is being decorated by this bean definition.
+	 * 注册一个被这个 bean 定义修饰的目标定义。
 	 */
 	public void setDecoratedDefinition(@Nullable BeanDefinitionHolder decoratedDefinition) {
 		this.decoratedDefinition = decoratedDefinition;
@@ -292,8 +287,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	}
 
 	/**
-	 * Specify the {@link AnnotatedElement} defining qualifiers,
-	 * to be used instead of the target class or factory method.
+	 * 指定AnnotatedElement定义限定符，以代替目标类或工厂方法使用。
 	 * @since 4.3.3
 	 * @see #setTargetType(ResolvableType)
 	 * @see #getResolvedFactoryMethod()
@@ -313,7 +307,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	}
 
 	/**
-	 * Specify a generics-containing target type of this bean definition, if known in advance.
+	 * 如果事先知道，请指定此 bean 定义的包含泛型的目标类型。
 	 * @since 4.3.3
 	 */
 	public void setTargetType(ResolvableType targetType) {

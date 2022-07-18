@@ -35,35 +35,27 @@ package org.springframework.context;
 public interface Lifecycle {
 
 	/**
-	 * Start this component.
-	 * <p>Should not throw an exception if the component is already running.
-	 * <p>In the case of a container, this will propagate the start signal to all
-	 * components that apply.
+	 * 启动这个组件。
+	 * 如果组件已经在运行，则不应抛出异常。
+	 * 在容器的情况下，这会将启动信号传播到所有应用的组件。
 	 * @see SmartLifecycle#isAutoStartup()
 	 */
 	void start();
 
 	/**
-	 * Stop this component, typically in a synchronous fashion, such that the component is
-	 * fully stopped upon return of this method. Consider implementing {@link SmartLifecycle}
-	 * and its {@code stop(Runnable)} variant when asynchronous stop behavior is necessary.
-	 * <p>Note that this stop notification is not guaranteed to come before destruction:
-	 * On regular shutdown, {@code Lifecycle} beans will first receive a stop notification
-	 * before the general destruction callbacks are being propagated; however, on hot
-	 * refresh during a context's lifetime or on aborted refresh attempts, a given bean's
-	 * destroy method will be called without any consideration of stop signals upfront.
-	 * <p>Should not throw an exception if the component is not running (not started yet).
-	 * <p>In the case of a container, this will propagate the stop signal to all components
-	 * that apply.
+	 * 停止此组件，通常以同步方式停止，以便组件在此方法返回时完全停止。当需要异步停止行为时，请考虑实施SmartLifecycle及其stop(Runnable)变体。
+	 * 请注意，此停止通知不能保证在销毁之前出现：在定期关闭时， Lifecycle bean 将首先收到停止通知，然后再传播一般的销毁回调；
+	 * 但是，在上下文生命周期内的热刷新或中止刷新尝试时，将调用给定 bean 的 destroy 方法，而无需预先考虑停止信号。
+	 * 如果组件未运行（尚未启动），则不应引发异常。
+	 * 在容器的情况下，这会将停止信号传播到所有应用的组件。
 	 * @see SmartLifecycle#stop(Runnable)
 	 * @see org.springframework.beans.factory.DisposableBean#destroy()
 	 */
 	void stop();
 
 	/**
-	 * Check whether this component is currently running.
-	 * <p>In the case of a container, this will return {@code true} only if <i>all</i>
-	 * components that apply are currently running.
+	 * 检查此组件当前是否正在运行。
+	 * 在容器的情况下，仅当所有应用的组件当前都在运行时才会返回true 。
 	 * @return whether the component is currently running
 	 */
 	boolean isRunning();

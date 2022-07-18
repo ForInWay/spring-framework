@@ -1005,9 +1005,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
-	 * Set whether this bean definition is 'synthetic', that is, not defined
-	 * by the application itself (for example, an infrastructure bean such
-	 * as a helper for auto-proxying, created through {@code <aop:config>}).
+	 * 设置此 bean 定义是否是“合成的”，即不是由应用程序本身定义的（例如，通过<aop:config>创建的基础设施 bean，例如用于自动代理的助手）
 	 */
 	public void setSynthetic(boolean synthetic) {
 		this.synthetic = synthetic;
@@ -1054,8 +1052,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
-	 * Set the resource that this bean definition came from
-	 * (for the purpose of showing context in case of errors).
+	 * 设置这个 bean 定义来自的资源（为了在出现错误时显示上下文）
 	 */
 	public void setResource(@Nullable Resource resource) {
 		this.resource = resource;
