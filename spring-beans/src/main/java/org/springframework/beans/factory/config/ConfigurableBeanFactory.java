@@ -31,16 +31,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
 
 /**
- * Configuration interface to be implemented by most bean factories. Provides
- * facilities to configure a bean factory, in addition to the bean factory
- * client methods in the {@link org.springframework.beans.factory.BeanFactory}
- * interface.
- *
- * <p>This bean factory interface is not meant to be used in normal application
- * code: Stick to {@link org.springframework.beans.factory.BeanFactory} or
- * {@link org.springframework.beans.factory.ListableBeanFactory} for typical
- * needs. This extended interface is just meant to allow for framework-internal
- * plug'n'play and for special access to bean factory configuration methods.
+ * 大多数bean工厂要实现的配置接口。除了BeanFactory接口中的 bean 工厂客户端方法之外，还提供了配置 bean 工厂的工具。
+ * 这个 bean factory 接口并不意味着在正常的应用程序代码中使用：坚持使用BeanFactory或org.springframework.beans.factory.ListableBeanFactory来满足典型需求。
+ * 这个扩展接口只是为了允许框架内部的即插即用和对 bean 工厂配置方法的特殊访问。
  *
  * @author Juergen Hoeller
  * @since 03.11.2003
@@ -210,7 +203,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	TypeConverter getTypeConverter();
 
 	/**
-	 * Add a String resolver for embedded values such as annotation attributes.
+	 * 为嵌入值（例如注释属性）添加字符串解析器。
 	 * @param valueResolver the String resolver to apply to embedded values
 	 * @since 3.0
 	 */
@@ -277,7 +270,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	Scope getRegisteredScope(String scopeName);
 
 	/**
-	 * Provides a security access control context relevant to this factory.
+	 * 提供与该工厂相关的安全访问控制上下文。
 	 * @return the applicable AccessControlContext (never {@code null})
 	 * @since 3.0
 	 */
@@ -390,18 +383,15 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	void destroyBean(String beanName, Object beanInstance);
 
 	/**
-	 * Destroy the specified scoped bean in the current target scope, if any.
-	 * <p>Any exception that arises during destruction should be caught
-	 * and logged instead of propagated to the caller of this method.
+	 * 销毁当前目标作用域中的指定作用域bean（如果有）。
+	 * 在销毁过程中出现的任何异常都应该被捕获并记录下来，而不是传播给这个方法的调用者。
 	 * @param beanName the name of the scoped bean
 	 */
 	void destroyScopedBean(String beanName);
 
 	/**
-	 * Destroy all singleton beans in this factory, including inner beans that have
-	 * been registered as disposable. To be called on shutdown of a factory.
-	 * <p>Any exception that arises during destruction should be caught
-	 * and logged instead of propagated to the caller of this method.
+	 * 销毁该工厂中的所有单例 bean，包括已注册为一次性的内部 bean。在工厂关闭时被调用。
+	 * 在销毁过程中出现的任何异常都应该被捕获并记录下来，而不是传播给这个方法的调用者。
 	 */
 	void destroySingletons();
 

@@ -993,8 +993,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Return whether this factory holds a DestructionAwareBeanPostProcessor
-	 * that will get applied to singleton beans on shutdown.
+	 * 返回此工厂是否拥有一个 DestructionAwareBeanPostProcessor，它将在关闭时应用于单例 bean。
 	 * @see #addBeanPostProcessor
 	 * @see org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor
 	 */
@@ -1788,8 +1787,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Remove the singleton instance (if any) for the given bean name,
-	 * but only if it hasn't been used for other purposes than type checking.
+	 * 删除给定 bean 名称的单例实例（如果有），但前提是它没有用于类型检查以外的其他目的。
 	 * @param beanName the name of the bean
 	 * @return {@code true} if actually removed, {@code false} otherwise
 	 */

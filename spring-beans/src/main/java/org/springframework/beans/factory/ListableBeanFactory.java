@@ -259,10 +259,8 @@ public interface ListableBeanFactory extends BeanFactory {
 			throws BeansException;
 
 	/**
-	 * Find all names of beans which are annotated with the supplied {@link Annotation}
-	 * type, without creating corresponding bean instances yet.
-	 * <p>Note that this method considers objects created by FactoryBeans, which means
-	 * that FactoryBeans will get initialized in order to determine their object type.
+	 * 查找所有使用提供的Annotation类型注释的 bean 名称，而无需创建相应的 bean 实例。
+	 * 请注意，此方法考虑由 FactoryBeans 创建的对象，这意味着 FactoryBeans 将被初始化以确定它们的对象类型。
 	 * @param annotationType the type of annotation to look for
 	 * (at class, interface or factory method level of the specified bean)
 	 * @return the names of all matching beans
@@ -272,10 +270,8 @@ public interface ListableBeanFactory extends BeanFactory {
 	String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType);
 
 	/**
-	 * Find all beans which are annotated with the supplied {@link Annotation} type,
-	 * returning a Map of bean names with corresponding bean instances.
-	 * <p>Note that this method considers objects created by FactoryBeans, which means
-	 * that FactoryBeans will get initialized in order to determine their object type.
+	 * 查找使用提供的Annotation类型进行注释的所有 bean，返回 bean 名称和相应 bean 实例的 Map。
+	 * 请注意，此方法考虑由 FactoryBeans 创建的对象，这意味着 FactoryBeans 将被初始化以确定它们的对象类型。
 	 * @param annotationType the type of annotation to look for
 	 * (at class, interface or factory method level of the specified bean)
 	 * @return a Map with the matching beans, containing the bean names as

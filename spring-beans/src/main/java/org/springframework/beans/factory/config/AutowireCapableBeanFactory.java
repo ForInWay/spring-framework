@@ -26,32 +26,14 @@ import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.lang.Nullable;
 
 /**
- * Extension of the {@link org.springframework.beans.factory.BeanFactory}
- * interface to be implemented by bean factories that are capable of
- * autowiring, provided that they want to expose this functionality for
- * existing bean instances.
- *
- * <p>This subinterface of BeanFactory is not meant to be used in normal
- * application code: stick to {@link org.springframework.beans.factory.BeanFactory}
- * or {@link org.springframework.beans.factory.ListableBeanFactory} for
- * typical use cases.
- *
- * <p>Integration code for other frameworks can leverage this interface to
- * wire and populate existing bean instances that Spring does not control
- * the lifecycle of. This is particularly useful for WebWork Actions and
- * Tapestry Page objects, for example.
- *
- * <p>Note that this interface is not implemented by
- * {@link org.springframework.context.ApplicationContext} facades,
- * as it is hardly ever used by application code. That said, it is available
- * from an application context too, accessible through ApplicationContext's
- * {@link org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()}
- * method.
- *
- * <p>You may also implement the {@link org.springframework.beans.factory.BeanFactoryAware}
- * interface, which exposes the internal BeanFactory even when running in an
- * ApplicationContext, to get access to an AutowireCapableBeanFactory:
- * simply cast the passed-in BeanFactory to AutowireCapableBeanFactory.
+ * BeanFactory接口的扩展，由能够自动装配的 bean 工厂实现，前提是他们希望为现有的 bean 实例公开此功能。
+ * BeanFactory 的这个子接口并不打算在正常的应用程序代码中使用：对于典型的用例，请坚持使用BeanFactory或org.springframework.beans.factory.ListableBeanFactory 。
+ * 其他框架的集成代码可以利用此接口来连接和填充 Spring 不控制其生命周期的现有 bean 实例。例如，这对于 WebWork Actions 和 Tapestry Page 对象特别有用。
+ * 请注意，这个接口不是由org.springframework.context.ApplicationContext门面实现的，因为它几乎不被应用程序代码使用。
+ * 也就是说，它也可以从应用程序上下文中获得，可以通过 ApplicationContext 的org.springframework.context.ApplicationContext.getAutowireCapableBeanFactory()方法访问。
+ * 您还可以实现org.springframework.beans.factory.BeanFactoryAware接口，
+ * 即使在 ApplicationContext 中运行时也会公开内部 BeanFactory，
+ * 以访问 AutowireCapableBeanFactory：只需将传入的 BeanFactory 转换为 AutowireCapableBeanFactory。
  *
  * @author Juergen Hoeller
  * @since 04.12.2003
@@ -125,13 +107,10 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	//-------------------------------------------------------------------------
 
 	/**
-	 * Fully create a new bean instance of the given class.
-	 * <p>Performs full initialization of the bean, including all applicable
-	 * {@link BeanPostProcessor BeanPostProcessors}.
-	 * <p>Note: This is intended for creating a fresh instance, populating annotated
-	 * fields and methods as well as applying all standard bean initialization callbacks.
-	 * It does <i>not</i> imply traditional by-name or by-type autowiring of properties;
-	 * use {@link #createBean(Class, int, boolean)} for those purposes.
+	 * 完全创建给定类的新 bean 实例。
+	 * 执行 bean 的完整初始化，包括所有适用的BeanPostProcessors 。
+	 * 注意：这旨在创建一个新实例、填充带注释的字段和方法以及应用所有标准 bean 初始化回调。
+	 * 它并不意味着传统的按名称或按类型自动装配属性；为这些目的使用createBean(Class, int, boolean) 。
 	 * @param beanClass the class of the bean to create
 	 * @return the new bean instance
 	 * @throws BeansException if instantiation or wiring failed
@@ -139,11 +118,8 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	<T> T createBean(Class<T> beanClass) throws BeansException;
 
 	/**
-	 * Populate the given bean instance through applying after-instantiation callbacks
-	 * and bean property post-processing (e.g. for annotation-driven injection).
-	 * <p>Note: This is essentially intended for (re-)populating annotated fields and
-	 * methods, either for new instances or for deserialized instances. It does
-	 * <i>not</i> imply traditional by-name or by-type autowiring of properties;
+	 * 通过应用实例化后回调和 bean 属性后处理来填充给定的 bean 实例（例如，用于注解驱动的注入）。
+	 * 注意：这本质上是用于（重新）填充带注释的字段和方法，无论是新实例还是反序列化实例。它并不意味着传统的按名称或按类型自动装配属性；为这些目的使用
 	 * use {@link #autowireBeanProperties} for those purposes.
 	 * @param existingBean the existing bean instance
 	 * @throws BeansException if wiring failed
@@ -151,13 +127,9 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	void autowireBean(Object existingBean) throws BeansException;
 
 	/**
-	 * Configure the given raw bean: autowiring bean properties, applying
-	 * bean property values, applying factory callbacks such as {@code setBeanName}
-	 * and {@code setBeanFactory}, and also applying all bean post processors
-	 * (including ones which might wrap the given raw bean).
-	 * <p>This is effectively a superset of what {@link #initializeBean} provides,
-	 * fully applying the configuration specified by the corresponding bean definition.
-	 * <b>Note: This method requires a bean definition for the given name!</b>
+	 * 配置给定的原始 bean：自动装配 bean 属性，应用 bean 属性值，应用工厂回调，例如setBeanName和setBeanFactory ，
+	 * 以及应用所有 bean 后处理器（包括可能包装给定原始 bean 的那些）。
+	 * 这实际上是initializeBean提供的超集，完全应用了相应 bean 定义指定的配置。注意：此方法需要给定名称的 bean 定义！
 	 * @param existingBean the existing bean instance
 	 * @param beanName the name of the bean, to be passed to it if necessary
 	 * (a bean definition of that name has to be available)
@@ -194,20 +166,9 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	Object createBean(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeansException;
 
 	/**
-	 * Instantiate a new bean instance of the given class with the specified autowire
-	 * strategy. All constants defined in this interface are supported here.
-	 * Can also be invoked with {@code AUTOWIRE_NO} in order to just apply
-	 * before-instantiation callbacks (e.g. for annotation-driven injection).
-	 * <p>Does <i>not</i> apply standard {@link BeanPostProcessor BeanPostProcessors}
-	 * callbacks or perform any further initialization of the bean. This interface
-	 * offers distinct, fine-grained operations for those purposes, for example
-	 * {@link #initializeBean}. However, {@link InstantiationAwareBeanPostProcessor}
-	 * callbacks are applied, if applicable to the construction of the instance.
-	 * @param beanClass the class of the bean to instantiate
-	 * @param autowireMode by name or type, using the constants in this interface
-	 * @param dependencyCheck whether to perform a dependency check for object
-	 * references in the bean instance (not applicable to autowiring a constructor,
-	 * thus ignored there)
+	 * 使用指定的自动装配策略实例化给定类的新 bean 实例。此处支持此接口中定义的所有常量。也可以使用AUTOWIRE_NO调用，以便仅应用实例化之前的回调（例如，用于注释驱动的注入）。
+	 * 不应用标准BeanPostProcessors回调或执行 bean 的任何进一步初始化。该接口为这些目的提供了不同的、细粒度的操作，例如initializeBean 。
+	 * 但是，如果适用于实例的构造，则会应用InstantiationAwareBeanPostProcessor回调。
 	 * @return the new bean instance
 	 * @throws BeansException if instantiation or wiring failed
 	 * @see #AUTOWIRE_NO
@@ -267,18 +228,8 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	void applyBeanPropertyValues(Object existingBean, String beanName) throws BeansException;
 
 	/**
-	 * Initialize the given raw bean, applying factory callbacks
-	 * such as {@code setBeanName} and {@code setBeanFactory},
-	 * also applying all bean post processors (including ones which
-	 * might wrap the given raw bean).
-	 * <p>Note that no bean definition of the given name has to exist
-	 * in the bean factory. The passed-in bean name will simply be used
-	 * for callbacks but not checked against the registered bean definitions.
-	 * @param existingBean the existing bean instance
-	 * @param beanName the name of the bean, to be passed to it if necessary
-	 * (only passed to {@link BeanPostProcessor BeanPostProcessors};
-	 * can follow the {@link #ORIGINAL_INSTANCE_SUFFIX} convention in order to
-	 * enforce the given instance to be returned, i.e. no proxies etc)
+	 * 初始化给定的原始 bean，应用工厂回调，例如setBeanName和setBeanFactory ，还应用所有 bean 后处理器（包括可能包装给定原始 bean 的那些）。
+	 * 请注意，给定名称的 bean 定义不必存在于 bean 工厂中。传入的 bean 名称将仅用于回调，但不会根据注册的 bean 定义进行检查。
 	 * @return the bean instance to use, either the original or a wrapped one
 	 * @throws BeansException if the initialization failed
 	 * @see #ORIGINAL_INSTANCE_SUFFIX
